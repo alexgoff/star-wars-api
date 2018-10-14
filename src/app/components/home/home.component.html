@@ -1,0 +1,51 @@
+<main class="container">
+
+  <aside class="sidebar">
+    <header class="header">
+      <img class="img-header" src="assets/img/Star_Wars_Yellow_Logo.svg" alt="Star Wars movie logo">
+      <h1>Character Bio</h1>
+    </header>
+
+    <p>Select a character to learn more about them, including the films they are featured in.</p>
+
+    <div class="character-list">
+      <ng-container *ngIf="!loading">
+        <ul>
+          <li *ngFor="let character of response.results">
+            <button class="button character" (click)="setCharacter(character)">
+              {{character.name}}
+            </button>
+          </li>
+        </ul>
+
+        <div class="pagination">
+          <button class="button previous" (click)="getPage(response.previous)" *ngIf="response.previous">Previous</button>
+          <button class="button next" (click)="getPage(response.next)" *ngIf="response.next">Next</button>
+        </div>
+      </ng-container>
+    </div>
+
+
+  </aside>
+
+  <div class="content">
+    <h2>Bio</h2>
+    <ng-container *ngIf="activeCharacter; else noCharacter">
+      <ng-container *ngIf="!characterLoading; else showLoader">
+        <app-character-details [character]="activeCharacter"></app-character-details>
+      </ng-container>
+    </ng-container>
+  </div>
+
+</main>
+
+<ng-template #showLoader>
+  <app-loader></app-loader>
+</ng-template>
+
+<ng-template #noCharacter>
+  <div class="no-characters">
+    <h3>No character selected</h3>
+    <p>Pick a character from the sidebar to learn more about them.</p>
+  </div>
+</ng-template>

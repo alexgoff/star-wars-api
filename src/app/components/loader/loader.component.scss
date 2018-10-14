@@ -1,0 +1,90 @@
+@import '../../../assets/scss/abstracts/variables';
+
+.loader-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    width: 100%;
+}
+
+.lightsaber {
+    display: flex;
+    align-items: center;
+    margin-top: 1rem;
+    width: 20rem;
+    position: relative;
+}
+
+.hilt {
+    background: linear-gradient(
+        to bottom,
+        $gray-light,
+        lighten($gray-light, 20),
+        lighten($gray-light, 20),
+        $gray-light
+    );
+    border-left: 0.25rem solid $gray-dark;
+    border-right: 0.25rem solid $gray-dark;
+    border-radius: 0.25rem;
+    width: 4rem;
+    height: 1rem;
+    position: relative;
+    z-index: 1;
+
+    &::before,
+    &::after {
+        background-color: $gray-dark;
+        content: '';
+        display: block;
+        position: absolute;
+        top: -0.15rem;
+        height: 0.3rem;
+    }
+
+    &::before {
+        left: 1rem;
+        width: 0.3rem;
+    }
+
+    &::after {
+        left: 2rem;
+        width: 0.6rem;
+    }
+}
+
+.plasma {
+    background: linear-gradient(
+        to bottom,
+        $red,
+        lighten($red, 60),
+        $red
+    );
+    border-top-right-radius: 0.4rem;
+    border-bottom-right-radius: 0.4rem;
+    filter: blur(1px);
+    width: 16rem;
+    height: 0.8rem;
+    position: relative;
+    transition: width 0.25s;
+    z-index: 0;
+}
+
+// @keyframes plasma-animation {
+//     0%,25% {
+//         width: 0;
+//     }
+//     50%,100% {
+//         width: 16rem;
+//     }
+// }
+
+// @keyframes hilt-animation {
+//     0%,54% {
+//         background-color: $gray-dark
+//     }
+//     55%,100% {
+//         background-color: $red;
+//     }
+// }

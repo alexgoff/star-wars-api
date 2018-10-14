@@ -1,0 +1,17 @@
+<div class="character-card">
+  <header class="card-header">
+    <h3>{{character.name}}</h3>
+    <dl class="info">
+      <dt>Species:</dt>
+      <dd *ngFor="let species of character.species; let first = first">
+          <ng-container *ngIf="!first">, </ng-container>{{species.name}}
+      </dd>
+      <dt>Homeworld:</dt>
+      <dd>{{character.homeworld.name}}</dd>
+    </dl>
+  </header>
+  <dl>
+    <dt>Films</dt>
+    <dd *ngFor="let film of character.films">{{film.title}}</dd>
+  </dl>
+</div>

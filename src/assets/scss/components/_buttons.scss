@@ -1,0 +1,18 @@
+.button {
+    border: none;
+    border-radius: 3px;
+    background: none;
+    color: $gold;
+    cursor: pointer;   
+    font-family: $font-family;
+    font-size: 1rem;
+    padding: 0.25rem;
+
+    &:hover,
+    &:active,
+    &:focus {
+        background: $gold;
+        color: $black;
+        outline: none;
+    } 
+}

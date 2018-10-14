@@ -1,0 +1,26 @@
+.character-card {
+    @include border;
+    padding: 1rem;
+}
+
+.card-header {
+    display: flex;
+    flex-direction: column;
+}
+
+.info {
+    dt,dd {
+        display: inline;
+    }
+}
+
+@media only screen and (min-width: $screen-sm) {
+    .card-header {
+        flex-direction: row;
+        justify-content: space-between;        
+    }
+
+    .info {
+        text-align: right;
+    }
+}

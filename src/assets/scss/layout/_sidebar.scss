@@ -1,0 +1,31 @@
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.85rem;
+
+    .character-list {
+        @include border;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        padding: 0.5rem;
+    }
+
+    ul {
+        list-style: none;
+    }
+
+    .character {
+        width: 100%;
+    }
+}
+
+.pagination {
+    display: flex;
+    margin-top: auto;
+    width: 100%;
+
+    .next {
+        margin-left: auto;
+    }
+}

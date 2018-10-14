@@ -1,0 +1,14 @@
+@charset 'utf-8';
+
+@import 'assets/scss/abstracts/variables';
+@import 'assets/scss/abstracts/functions';
+@import 'assets/scss/abstracts/mixins';
+
+@import 'assets/scss/base/reset';
+@import 'assets/scss/base/typography';
+
+@import 'assets/scss/components/buttons';
+
+@import 'assets/scss/layout/card';
+@import 'assets/scss/layout/main';
+@import 'assets/scss/layout/sidebar';
