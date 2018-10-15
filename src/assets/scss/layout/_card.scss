@@ -9,8 +9,16 @@
 }
 
 .info {
-    dt,dd {
-        display: inline;
+    display: flex;
+    flex-wrap: wrap;
+
+    dt,
+    dd {
+        flex-basis: 50%;
+    }
+
+    dd {
+        text-align: right;
     }
 }
 
@@ -21,6 +29,11 @@
     }
 
     .info {
+        display: inline-block;
         text-align: right;
+
+        dt, dd {
+            display: inline;
+        }
     }
 }
