@@ -1,6 +1,7 @@
 import { Component, OnInit, AnimationKeyframe } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { ActivatedRoute, Router } from "@angular/router";
 import { AppService } from '../../app.service';
 import { People } from '../../models/people';
 import { Film } from '../../models/film';
@@ -22,10 +23,14 @@ export class HomeComponent implements OnInit {
   characterLoading: boolean = false;
 
 
-  constructor(private _appService: AppService) { }
+  constructor(private _appService: AppService, private route: ActivatedRoute, private router: Router,) { 
+  }
 
   ngOnInit() {
-    // on init, get all characters for the current API page
+    // if there is a router param, get the character in it
+    this.route.params.subscribe( params => this.getCharacter(params['person']));
+
+    // on init, get all characters for the current API page to load into the menu
     this.getAllCharacters();
   }
 
@@ -43,6 +48,17 @@ export class HomeComponent implements OnInit {
     this.Characters$.next(this.response.results);
 
     this.loading = false;
+  }
+
+  async getCharacter(id: string) {
+    this.characterLoading = true;
+    let asyncResponse: any;
+
+    asyncResponse = await this._appService
+    .getCharacter(id)
+    .then((data: Character) => {
+      this.setActiveCharacter(data);
+    })
   }
 
   async getAllFilms(filmUrls: any[]) {
@@ -89,7 +105,7 @@ export class HomeComponent implements OnInit {
   }
 
   checkStore(character: Character): boolean {
-    
+
     for (let i = 0; i < this.characterStore.length; i++) {
       if (character.name === this.characterStore[i].name) {
         this.activeCharacter = this.characterStore[i];
@@ -104,6 +120,8 @@ export class HomeComponent implements OnInit {
   // assign the active character, get their films, species, and homeworld
   setActiveCharacter(character: Character) {
     this.characterLoading = true;
+
+    this.router.navigate(['/character/',character.url.slice(28).replace('/','')]);
 
     if (this.checkStore(character)) {
       this.characterLoading = false;

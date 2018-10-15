@@ -3,11 +3,15 @@
     <h3>{{character.name}}</h3>
     <dl class="info">
       <dt>Species:</dt>
-      <dd *ngFor="let species of character.species; let first = first">
-          <ng-container *ngIf="!first">, </ng-container>{{species.name}}
-      </dd>
+      <ng-container *ngIf="character.species.length; else unknown">
+        <dd *ngFor="let species of character.species; let first = first">
+            <ng-container *ngIf="!first">, </ng-container>{{species.name}}
+        </dd>
+      </ng-container>
       <dt>Homeworld:</dt>
-      <dd>{{character.homeworld[0].name}}</dd>
+      <ng-container *ngIf="character.homeworld.length; else unknown">
+        <dd>{{character.homeworld[0].name}}</dd>
+      </ng-container>
     </dl>
   </header>
   <dl>
@@ -15,3 +19,7 @@
     <dd *ngFor="let film of character.films">{{film.title}}</dd>
   </dl>
 </div>
+
+<ng-template #unknown>
+  <dd>Unknown</dd>
+</ng-template>

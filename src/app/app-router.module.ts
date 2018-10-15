@@ -6,6 +6,14 @@ import { HomeComponent } from "./components/home/home.component";
     {
       path: "",
       component: HomeComponent
+    },
+    {
+      path: "character/:person",
+      component: HomeComponent
+    },
+    {
+      path: "**",
+      redirectTo: ""
     }
   ];
 

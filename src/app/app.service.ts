@@ -24,6 +24,10 @@ export class AppService {
     return await this.GET<People>(API_URL + '/people/?page=' + page);
   }
 
+  public async getCharacter(id: string) {
+    return await this.GET<Character>(API_URL + '/people/' + id);
+  }
+
   public async getAllFilms(url: string) {
     return await this.GET<Film>(url);
   }
