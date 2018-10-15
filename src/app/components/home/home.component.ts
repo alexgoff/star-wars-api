@@ -17,6 +17,7 @@ export class HomeComponent implements OnInit {
   response: People;
   Characters$ = new BehaviorSubject([])
   activeCharacter: Character;
+  characterStore: Character[] = [];
   loading: boolean = false;
   characterLoading: boolean = false;
 
@@ -34,10 +35,10 @@ export class HomeComponent implements OnInit {
     let asyncResponse: any;
 
     asyncResponse = await this._appService
-    .getAllCharacters(page)
-    .then((data: People) => {
-      this.response = data;
-    })
+      .getAllCharacters(page)
+      .then((data: People) => {
+        this.response = data;
+      })
 
     this.Characters$.next(this.response.results);
 
@@ -48,12 +49,12 @@ export class HomeComponent implements OnInit {
     let asyncResponse: any;
     let films: Film[] = []
 
-    for(let i = 0; i < filmUrls.length; i++) {
+    for (let i = 0; i < filmUrls.length; i++) {
       asyncResponse = await this._appService
-      .getAllFilms(filmUrls[i])
-      .then((data: Film) => {
-        films.push(data);
-      })
+        .getAllFilms(filmUrls[i])
+        .then((data: Film) => {
+          films.push(data);
+        })
     }
 
     return films;
@@ -63,15 +64,15 @@ export class HomeComponent implements OnInit {
     let asyncResponse: any;
     let species: any[] = []
 
-    for(let i = 0; i < speciesUrls.length; i++) {
+    for (let i = 0; i < speciesUrls.length; i++) {
       asyncResponse = await this._appService
-      .getAllSpecies(speciesUrls[i])
-      .then((data: Species) => {
-        species.push(data);
-      })
+        .getAllSpecies(speciesUrls[i])
+        .then((data: Species) => {
+          species.push(data);
+        })
     }
 
-    return species;    
+    return species;
   }
 
   async getHomeworld(homeworldUrl: any) {
@@ -79,40 +80,55 @@ export class HomeComponent implements OnInit {
     let homeworld: Homeworld;
 
     asyncResponse = await this._appService
-    .getHomeworld(homeworldUrl)
-    .then((data: Homeworld) => {
-      homeworld = data;
-    })
+      .getHomeworld(homeworldUrl)
+      .then((data: Homeworld) => {
+        homeworld = data;
+      })
 
     return homeworld;
+  }
+
+  checkStore(character: Character): boolean {
+    
+    for (let i = 0; i < this.characterStore.length; i++) {
+      if (character.name === this.characterStore[i].name) {
+        this.activeCharacter = this.characterStore[i];
+        return true;
+      }
+    }
+
+    this.activeCharacter = character;
+    return false;
   }
 
   // assign the active character, get their films, species, and homeworld
   setActiveCharacter(character: Character) {
     this.characterLoading = true;
-    
-    this.activeCharacter = character;
 
-    // this.getHomeworld(character.homeworld).then(homeworld => {
-    //   this.activeCharacter.homeworld = [];
-    //   this.activeCharacter.homeworld.push(homeworld);
-    // })
-
-    // this.getAllSpecies(character.species).then(species => {
-    //   this.activeCharacter.species = species;
-    // });
-
-    this.getAllFilms(character.films).then(films => {
-      this.activeCharacter.films = films;
+    if (this.checkStore(character)) {
       this.characterLoading = false;
-    });
+    } else {
+      this.getHomeworld(character.homeworld).then(homeworld => {
+        this.activeCharacter.homeworld = [];
+        this.activeCharacter.homeworld.push(homeworld);
+      })
 
+      this.getAllSpecies(character.species).then(species => {
+        this.activeCharacter.species = species;
+      });
 
+      this.getAllFilms(character.films).then(films => {
+        this.activeCharacter.films = films;
+        this.characterLoading = false;
+      });
+
+      this.characterStore.push(this.activeCharacter);
+    }
   }
 
   // change page by calling all characters again with new page number
   changePage(pageUrl) {
     this.getAllCharacters(pageUrl.slice(34));
   }
-  
+
 }
