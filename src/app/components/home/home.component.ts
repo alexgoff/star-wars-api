@@ -51,7 +51,6 @@ export class HomeComponent implements OnInit {
   }
 
   async getCharacter(id: string) {
-    this.characterLoading = true;
     let asyncResponse: any;
 
     asyncResponse = await this._appService
@@ -137,7 +136,12 @@ export class HomeComponent implements OnInit {
 
       this.getAllFilms(character.films).then(films => {
         this.activeCharacter.films = films;
-        this.characterLoading = false;
+
+        // get a little extra time to make sure all the other API calls are wrapped up
+        setTimeout(()=> {
+          this.characterLoading = false;
+        }, 
+          500);
       });
 
       this.characterStore.push(this.activeCharacter);
