@@ -20,6 +20,7 @@ export class HomeComponent implements OnInit {
 
 
   ngOnInit() {
+    // on init, get all characters for the current API page
     this.getAllCharacters();
   }
 
@@ -37,21 +38,30 @@ export class HomeComponent implements OnInit {
     this.loading = false;
   }
 
+  // pull all info for a single character
+  async getCharacter(characterUrl) {
+    this.characterLoading = true;
+    let asyncResponse: any;
+
+    asyncResponse = await this._appService.getCharacter(characterUrl).toPromise().then(
+      (data: Character) => {
+        this.activeCharacter = data;
+      }
+    );    
+
+    this.characterLoading = false;
+
+  }
+
   getPage(pageUrl) {
     let pageNumber = pageUrl.slice(34);
     
     this.getAllCharacters(pageNumber);
   }
 
+  // when a character is clicked, this characters info needs to populate a single object
   setCharacter(character: Character) {
-    this.characterLoading = true;
-    this.activeCharacter = character;
-
-    // this.setCharacterFilms(this.activeCharacter.films);
-    // this.setCharacterSpecies(this.activeCharacter.species);
-    // this.setCharacterHomeworld(this.activeCharacter.homeworld);
-
-    this.characterLoading = false;
+    this.getCharacter(character.url);
   }
 
 }
