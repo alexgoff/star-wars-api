@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpRequest } from '@angular/common/http';
+import { JsonPipe } from '@angular/common';
 import { Observable } from 'rxjs/Observable';
 import { environment } from '../environments/environment';
 import { map, catchError, tap } from 'rxjs/operators';
 import { People } from './models/people';
+import { Film } from './models/film';
 import { Character } from './models/character';
+import { Species } from './models/species';
+import { Homeworld } from './models/homeworld';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-
-const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-};
 
 const API_URL = environment.apiUrl;
 
@@ -20,23 +20,37 @@ const API_URL = environment.apiUrl;
 export class AppService {
   constructor(private http: HttpClient) { }
 
-  private extractData(res: Response) {
-    let body = res;
-    return body || {};
+  public async getAllCharacters(page: string) {
+    return await this.GET<People>(API_URL + '/people/?page=' + page);
   }
 
-  getAllCharacters(page: string): Observable<People> {
-    return this.http.get<People>(API_URL + '/people/?page=' + page)
-    .map(data => {
-      return data;
-   });
+  public async getAllFilms(url: string) {
+    return await this.GET<Film>(url);
   }
 
-  // this is where I want to get the character, their films, their species, and their homeworld and put it in one object
-  getCharacter(url: string): Observable<Character> {
-    return this.http.get<Character>(url)
-    .map(data => {
-      return data;
-   });
+  public async getAllSpecies(url: string) {
+    return await this.GET<Species>(url);
   }
+
+  public async getHomeworld(url: string) {
+    return await this.GET<Homeworld>(url);
+  }
+
+  private async GET<T>(url: string) {
+    const REQUEST_URL = url;
+    const REQUEST: HttpRequest<any> = new HttpRequest('GET', REQUEST_URL);
+    console.log('GET Request: ' + REQUEST_URL);
+    return await this.http
+      .get(REQUEST.url)
+      .toPromise()
+      .then((resp: T) => {
+        // console.log('GET Response: ' + JSON.stringify(resp));
+        return resp;
+      })
+      .catch(() => {
+        console.log('Error trying to GET data.');
+        return null;
+      });
+  }
+
 }

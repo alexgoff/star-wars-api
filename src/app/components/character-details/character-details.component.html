@@ -7,7 +7,7 @@
           <ng-container *ngIf="!first">, </ng-container>{{species.name}}
       </dd>
       <dt>Homeworld:</dt>
-      <dd>{{character.homeworld.name}}</dd>
+      <dd>{{character.homeworld[0].name}}</dd>
     </dl>
   </header>
   <dl>

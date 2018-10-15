@@ -1,8 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AnimationKeyframe } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { AppService } from '../../app.service';
 import { People } from '../../models/people';
+import { Film } from '../../models/film';
 import { Character } from '../../models/character';
+import { Species } from '../../models/species';
+import { Homeworld } from '../../models/homeworld';
 
 @Component({
   selector: 'app-home',
@@ -11,13 +15,13 @@ import { Character } from '../../models/character';
 })
 export class HomeComponent implements OnInit {
   response: People;
+  Characters$ = new BehaviorSubject([])
   activeCharacter: Character;
   loading: boolean = false;
-  characterLoading : boolean = false;
-  films: any = [];
+  characterLoading: boolean = false;
+
 
   constructor(private _appService: AppService) { }
-
 
   ngOnInit() {
     // on init, get all characters for the current API page
@@ -29,39 +33,86 @@ export class HomeComponent implements OnInit {
     this.loading = true;
     let asyncResponse: any;
 
-    asyncResponse = await this._appService.getAllCharacters(page).toPromise().then(
-      (data: People) => {
-        this.response = data
-      }
-    );
+    asyncResponse = await this._appService
+    .getAllCharacters(page)
+    .then((data: People) => {
+      this.response = data;
+    })
+
+    this.Characters$.next(this.response.results);
 
     this.loading = false;
   }
 
-  // pull all info for a single character
-  async getCharacter(characterUrl) {
-    this.characterLoading = true;
+  async getAllFilms(filmUrls: any[]) {
     let asyncResponse: any;
+    let films: Film[] = []
 
-    asyncResponse = await this._appService.getCharacter(characterUrl).toPromise().then(
-      (data: Character) => {
-        this.activeCharacter = data;
-      }
-    );    
+    for(let i = 0; i < filmUrls.length; i++) {
+      asyncResponse = await this._appService
+      .getAllFilms(filmUrls[i])
+      .then((data: Film) => {
+        films.push(data);
+      })
+    }
 
-    this.characterLoading = false;
-
+    return films;
   }
 
-  getPage(pageUrl) {
-    let pageNumber = pageUrl.slice(34);
+  async getAllSpecies(speciesUrls: any[]) {
+    let asyncResponse: any;
+    let species: any[] = []
+
+    for(let i = 0; i < speciesUrls.length; i++) {
+      asyncResponse = await this._appService
+      .getAllSpecies(speciesUrls[i])
+      .then((data: Species) => {
+        species.push(data);
+      })
+    }
+
+    return species;    
+  }
+
+  async getHomeworld(homeworldUrl: any) {
+    let asyncResponse: any;
+    let homeworld: Homeworld;
+
+    asyncResponse = await this._appService
+    .getHomeworld(homeworldUrl)
+    .then((data: Homeworld) => {
+      homeworld = data;
+    })
+
+    return homeworld;
+  }
+
+  // assign the active character, get their films, species, and homeworld
+  setActiveCharacter(character: Character) {
+    this.characterLoading = true;
     
-    this.getAllCharacters(pageNumber);
+    this.activeCharacter = character;
+
+    // this.getHomeworld(character.homeworld).then(homeworld => {
+    //   this.activeCharacter.homeworld = [];
+    //   this.activeCharacter.homeworld.push(homeworld);
+    // })
+
+    // this.getAllSpecies(character.species).then(species => {
+    //   this.activeCharacter.species = species;
+    // });
+
+    this.getAllFilms(character.films).then(films => {
+      this.activeCharacter.films = films;
+      this.characterLoading = false;
+    });
+
+
   }
 
-  // when a character is clicked, this characters info needs to populate a single object
-  setCharacter(character: Character) {
-    this.getCharacter(character.url);
+  // change page by calling all characters again with new page number
+  changePage(pageUrl) {
+    this.getAllCharacters(pageUrl.slice(34));
   }
-
+  
 }

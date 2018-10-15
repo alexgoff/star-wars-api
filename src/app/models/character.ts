@@ -9,7 +9,7 @@ export interface Character {
     eye_color: string;
     birth_year: string;
     gender: string;
-    homeworld: any;
+    homeworld: any[];
     films: any[];
     species: string[];
     url: string;

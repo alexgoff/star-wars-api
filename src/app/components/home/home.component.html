@@ -9,18 +9,18 @@
     <p>Select a character to learn more about them, including the films they are featured in.</p>
 
     <div class="character-list">
-      <ng-container *ngIf="!loading">
+      <ng-container *ngIf="!loading; else showLoader">
         <ul>
-          <li *ngFor="let character of response.results">
-            <button class="button character" (click)="setCharacter(character)">
+          <li *ngFor="let character of Characters$ | async">
+            <button class="button character" (click)="setActiveCharacter(character)" [class.active]="activeCharacter && (activeCharacter.name === character.name)">
               {{character.name}}
             </button>
           </li>
         </ul>
 
         <div class="pagination">
-          <button class="button previous" (click)="getPage(response.previous)" *ngIf="response.previous">Previous</button>
-          <button class="button next" (click)="getPage(response.next)" *ngIf="response.next">Next</button>
+          <button class="button previous" (click)="changePage(response.previous)" *ngIf="response.previous">Previous</button>
+          <button class="button next" (click)="changePage(response.next)" *ngIf="response.next">Next</button>
         </div>
       </ng-container>
     </div>
